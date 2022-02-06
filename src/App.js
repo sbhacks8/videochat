@@ -6,8 +6,8 @@ import Overlay from './Overlay'
 import './App.css';
 import VideoChat from './VideoChat';
 
-function Carla(props) {
-  const { scene } = useGLTF('scene.glb')
+function LivingRoom(props) {
+  const { scene } = useGLTF('livingroom.glb')
   return <primitive object={scene} {...props} />
 }
 
@@ -36,7 +36,7 @@ export default function App() {
           
           <Suspense fallback={null}>
             <group position={[0, -1, 0]}>
-              <Carla rotation={[0.05, Math.PI -1.0, 0.05]} position={[-1, 3.5, 9]} scale={[0.15, 0.15, 0.15]} />
+              <LivingRoom rotation={[0.05, Math.PI -1.0, 0.05]} position={[-1, 3.5, 9]} scale={[0.15, 0.15, 0.15]} />
               <Html>
                 <div className={'screen'}>
                   <VideoChat />
