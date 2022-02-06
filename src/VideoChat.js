@@ -4,8 +4,8 @@ import Lobby from "./Lobby";
 import Room from "./Room";
 
 const VideoChat = () => {
-  const [username, setUsername] = useState("");
-  const [roomName, setRoomName] = useState("");
+  const [username, setUsername] = useState("Adam");
+  const [roomName, setRoomName] = useState("Adama's Living Room");
   const [room, setRoom] = useState(null);
   const [connecting, setConnecting] = useState(false);
 
@@ -17,10 +17,22 @@ const VideoChat = () => {
     setRoomName(event.target.value);
   }, []);
 
-  const handleSubmit = useCallback(
-    async (event) => {
-      event.preventDefault();
+  const handleLogout = useCallback(() => {
+    setRoom((prevRoom) => {
+      if (prevRoom) {
+        prevRoom.localParticipant.tracks.forEach((trackPub) => {
+          trackPub.track.stop();
+        });
+        prevRoom.disconnect();
+      }
+      return null;
+    });
+  }, []);
+
+  useEffect(() => {
+    let connectRoom = async () => {
       setConnecting(true);
+      if (connecting) return
       const data = await fetch("/video/token", {
         method: "POST",
         body: JSON.stringify({
@@ -42,40 +54,9 @@ const VideoChat = () => {
           console.error(err);
           setConnecting(false);
         });
-    },
-    [roomName, username]
-  );
-
-  const handleLogout = useCallback(() => {
-    setRoom((prevRoom) => {
-      if (prevRoom) {
-        prevRoom.localParticipant.tracks.forEach((trackPub) => {
-          trackPub.track.stop();
-        });
-        prevRoom.disconnect();
       }
-      return null;
-    });
-  }, []);
-
-  useEffect(() => {
-    if (room) {
-      const tidyUp = (event) => {
-        if (event.persisted) {
-          return;
-        }
-        if (room) {
-          handleLogout();
-        }
-      };
-      window.addEventListener("pagehide", tidyUp);
-      window.addEventListener("beforeunload", tidyUp);
-      return () => {
-        window.removeEventListener("pagehide", tidyUp);
-        window.removeEventListener("beforeunload", tidyUp);
-      };
-    }
-  }, [room, handleLogout]);
+ connectRoom()
+  });
 
   let render;
   if (room) {
@@ -84,14 +65,7 @@ const VideoChat = () => {
     );
   } else {
     render = (
-      <Lobby
-        username={username}
-        roomName={roomName}
-        handleUsernameChange={handleUsernameChange}
-        handleRoomNameChange={handleRoomNameChange}
-        handleSubmit={handleSubmit}
-        connecting={connecting}
-      />
+      <div></div>
     );
   }
   return render;
