@@ -40,7 +40,7 @@ const Room = ({ roomName, room, handleLogout }) => {
           ""
         )}
       </div>
-      <h3>Remote Participants</h3>
+      {/* <h3>Remote Participants</h3> */}
       <div className="remote-participants">{remoteParticipants}</div>
     </div>
   );

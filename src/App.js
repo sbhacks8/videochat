@@ -31,8 +31,6 @@ export default function App() {
     <>
        
         <Canvas concurrent gl={{ alpha: false }} pixelRatio={[1, 1.5]} camera={{ position: [0, 3, 100], fov: 15 }}>
-          <color attach="background" args={['black']} />
-          <fog attach="fog" args={['black', 15, 20]} />
           
           <Suspense fallback={null}>
             <group position={[0, -1, 0]}>
@@ -42,8 +40,6 @@ export default function App() {
                   <VideoChat />
                 </div>
               </Html>
-              {/* <VideoText {...store} ref={ref} position={[0, 1.3, -2]} /> */}
-              {/* <Ground /> */}
             </group>
             <ambientLight intensity={0.5} />
             <spotLight position={[0, 10, 0]} intensity={0.3} />
@@ -61,7 +57,7 @@ function Intro({ start, set }) {
   useEffect(() => setTimeout(() => set(true), 500), [])
   return useFrame((state) => {
     if (start) {
-      state.camera.position.lerp(vec.set(state.mouse.x * 5, 3 + state.mouse.y * 2, 14), 0.05)
+      state.camera.position.lerp(vec.set(state.mouse.x * .5, 3 + state.mouse.y * .2, 14), 0.05)
       state.camera.lookAt(0, 0, 0)
     }
   })
